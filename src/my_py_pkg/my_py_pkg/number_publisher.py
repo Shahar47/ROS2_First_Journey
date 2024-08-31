@@ -8,9 +8,12 @@ class NumberPublisherNode(Node):
 
     def __init__(self):
         super().__init__("number_publisher")
-        self.number_ = 2
+        self.declare_parameter("number_to_publish",2)
+        self.declare_parameter("publish_frequency", 1.0)
+        self.number_ = self.get_parameter("number_to_publish").value
+        self.publish_frequency_ = self.get_parameter("publish_frequency").value
         self.publisher_ = self.create_publisher(Int64, "number", 10)
-        self.number_timer = self.create_timer(1.0, self.publish_number)
+        self.number_timer = self.create_timer(1.0 / self.publish_frequency_, self.publish_number)
         self.get_logger().info("Number Publisher has been started.")
 
 
